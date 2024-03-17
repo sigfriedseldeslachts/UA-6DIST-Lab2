@@ -46,13 +46,15 @@ public class AccountController {
     @PostMapping("/{id}/members/{memberId}")
     public boolean addMember(@PathVariable long userId, @PathVariable long id, @PathVariable long memberId) {
         User user = service.getUser(userId);
-        if (user == null) return false;
+        User member = service.getUser(memberId);
+        if (user == null || member == null) return false;
 
         if (!user.getAvailableAccounts().contains(id)) {
             return false;
         }
 
         BankAccount account = service.getAccount(id);
+        member.addAccount(id);
         return account.addExtraMember(memberId);
     }
 
